@@ -1,0 +1,68 @@
+{
+  "synthetic": true,
+  "network_calls": 0,
+  "providers": "fixture STT/LLM; synthetic PCM tones",
+  "voice": {
+    "transport_frames": 2,
+    "final_state": "closed",
+    "tool_result": {
+      "found": true,
+      "part": "DEMO-ADC",
+      "description": "Fictional ADC for the demo",
+      "stock": 12,
+      "synthetic": true
+    },
+    "events": [
+      {
+        "event": "answer",
+        "state": "speaking",
+        "provider": "primary",
+        "queued_samples": 80
+      },
+      {
+        "event": "interrupt",
+        "state": "listening",
+        "provider": "primary",
+        "queued_samples": 0
+      },
+      {
+        "event": "timeout",
+        "state": "listening",
+        "provider": "fallback",
+        "queued_samples": 0
+      },
+      {
+        "event": "answer",
+        "state": "speaking",
+        "provider": "fallback",
+        "queued_samples": 80
+      },
+      {
+        "event": "hangup",
+        "state": "closed",
+        "provider": "fallback",
+        "queued_samples": 0
+      }
+    ]
+  },
+  "transcript": {
+    "turn_count": 3,
+    "input_segments": 4,
+    "left_rms": 499.72,
+    "right_rms": 499.7
+  },
+  "crm": {
+    "outcomes": [
+      "review",
+      "applied",
+      "duplicate",
+      "review"
+    ],
+    "audit_events": 3,
+    "final_customer": {
+      "id": "DEMO-CUSTOMER",
+      "status": "quote_requested",
+      "summary": "The customer requested a quotation for twenty fictional DEMO-ADC units."
+    }
+  }
+}

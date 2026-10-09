@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+.demo-output/
+.env
+.env.*
+.superpowers/
+*.sqlite
+*.db
+*.log
+*.pem
+*.key
+*.wav
+*.mp3
+*.mp4
+.venv/

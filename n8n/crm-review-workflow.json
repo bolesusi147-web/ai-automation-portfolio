@@ -1,0 +1,153 @@
+{
+  "name": "Synthetic AI output validation and human review",
+  "nodes": [
+    {
+      "id": "demo-manual",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "demo-fixture",
+      "name": "Synthetic Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ],
+      "parameters": {
+        "jsCode": "return [{ json: { synthetic: true, event_id: 'DEMO-EVENT', customer_id: 'DEMO-CUSTOMER', approved: false, model_output: { status: 'quote_requested', summary: 'Synthetic quotation request.', confidence: 0.9, next_action: 'follow_up' } } }];"
+      }
+    },
+    {
+      "id": "demo-validate",
+      "name": "Validate and Route",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ],
+      "parameters": {
+        "jsCode": "return $input.all().map(item => {\n  const input = item.json;\n  const output = { event_id: input.event_id, customer_id: input.customer_id, outcome: 'review', reason: 'Human review required', synthetic: true };\n  try {\n    const data = typeof input.model_output === 'string' ? JSON.parse(input.model_output) : input.model_output;\n    const keys = ['status', 'summary', 'confidence', 'next_action'];\n    if (!data || typeof data !== 'object' || Array.isArray(data) || Object.keys(data).sort().join('|') !== [...keys].sort().join('|')) throw new Error('Unexpected analysis fields');\n    if (!['new', 'quote_requested', 'follow_up', 'resolved'].includes(data.status)) throw new Error('Unsupported status');\n    if (!['none', 'follow_up', 'review'].includes(data.next_action)) throw new Error('Unsupported action');\n    if (typeof data.confidence !== 'number' || !Number.isFinite(data.confidence) || data.confidence < 0 || data.confidence > 1) throw new Error('Invalid confidence');\n    if (typeof data.summary !== 'string' || !data.summary.trim() || data.summary.length > 2000) throw new Error('Invalid summary');\n    if (input.approved === true && data.confidence >= 0.8 && data.next_action !== 'review') {\n      output.outcome = 'applied'; output.reason = 'Validated and explicitly approved'; output.analysis = data;\n    }\n  } catch (_) { output.reason = 'Invalid model output; review required'; }\n  return { json: output };\n});"
+      }
+    },
+    {
+      "id": "demo-if",
+      "name": "Approved?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "demo-condition",
+              "leftValue": "={{ $json.outcome }}",
+              "rightValue": "applied",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      }
+    },
+    {
+      "id": "demo-applied",
+      "name": "Applied — reference only",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        900,
+        -100
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "demo-review",
+      "name": "Review — reference only",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        900,
+        100
+      ],
+      "parameters": {}
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Synthetic Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Synthetic Input": {
+      "main": [
+        [
+          {
+            "node": "Validate and Route",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate and Route": {
+      "main": [
+        [
+          {
+            "node": "Approved?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Approved?": {
+      "main": [
+        [
+          {
+            "node": "Applied — reference only",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Review — reference only",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false,
+  "pinData": {}
+}

@@ -1,0 +1,27 @@
+name: Portfolio checks
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  offline-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout without persisted credentials
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Python 3.11
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.11'
+      - name: Behaviour tests
+        run: python -m unittest discover -s tests -v
+      - name: Synthetic offline demonstration
+        run: python -m portfolio demo
+      - name: Execute exported n8n validation logic
+        run: node tools/check_n8n_workflow.mjs
+      - name: Public content and history checks
+        run: python tools/check_public_content.py --history

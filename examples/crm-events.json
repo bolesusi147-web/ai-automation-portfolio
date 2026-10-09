@@ -1,0 +1,21 @@
+[
+  {
+    "event_id": "evt-review",
+    "outcome": "review",
+    "reason": "Human review required"
+  },
+  {
+    "event_id": "evt-approved",
+    "outcome": "applied",
+    "reason": "Validated and explicitly approved"
+  },
+  {
+    "event_id": "evt-approved",
+    "outcome": "duplicate"
+  },
+  {
+    "event_id": "evt-malformed",
+    "outcome": "review",
+    "reason": "Malformed model JSON"
+  }
+]

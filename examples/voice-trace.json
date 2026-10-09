@@ -1,0 +1,32 @@
+[
+  {
+    "event": "answer",
+    "state": "speaking",
+    "provider": "primary",
+    "queued_samples": 80
+  },
+  {
+    "event": "interrupt",
+    "state": "listening",
+    "provider": "primary",
+    "queued_samples": 0
+  },
+  {
+    "event": "timeout",
+    "state": "listening",
+    "provider": "fallback",
+    "queued_samples": 0
+  },
+  {
+    "event": "answer",
+    "state": "speaking",
+    "provider": "fallback",
+    "queued_samples": 80
+  },
+  {
+    "event": "hangup",
+    "state": "closed",
+    "provider": "fallback",
+    "queued_samples": 0
+  }
+]

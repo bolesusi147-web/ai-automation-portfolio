@@ -1,0 +1,4 @@
+SYNTHETIC TRANSCRIPT — fixture STT, not recognised speech
+[00.00–01.00] MANAGER: Hello, how can I help?
+[01.20–02.50] CUSTOMER: Please send a quotation for twenty DEMO-ADC units.
+[02.80–04.00] MANAGER: I will check the catalogue and prepare a quotation.

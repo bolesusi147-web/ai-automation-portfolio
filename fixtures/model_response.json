@@ -1,0 +1,10 @@
+{
+  "synthetic": true,
+  "provider": "fixture-llm",
+  "analysis": {
+    "status": "quote_requested",
+    "summary": "The customer requested a quotation for twenty fictional DEMO-ADC units.",
+    "confidence": 0.9,
+    "next_action": "follow_up"
+  }
+}
