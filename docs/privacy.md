@@ -16,3 +16,10 @@ Git metadata includes the candidate's chosen name and resume email.
 
 No source-system snapshot is imported or filtered into this repository. The demos
 are independently prepared examples of previously used integration patterns.
+
+README PNG/GIF graphics are reviewed synthetic illustrations, with exact
+fingerprints recorded in `assets/manifest.json`. Only the three explicitly
+named visual paths are permitted. Their format, size and fingerprint are
+checked in the working tree and committed history; arbitrary binary files
+remain rejected. These checks do not read text from pixels. Visual inspection
+and provenance review are required before approving or replacing an asset.

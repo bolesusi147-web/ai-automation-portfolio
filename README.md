@@ -1,5 +1,7 @@
 # Alex Sparrow · AI & Business Automation
 
+![Alex Sparrow — AI and business automation: voice, workflows and integrations](assets/portfolio-cover.png)
+
 [![Portfolio checks](https://github.com/bolesusi147-web/ai-automation-portfolio/actions/workflows/checks.yml/badge.svg)](https://github.com/bolesusi147-web/ai-automation-portfolio/actions/workflows/checks.yml)
 
 **Practical AI implementation, voice workflows and reliable business integrations.**
@@ -15,7 +17,30 @@ business systems. Code here was prepared with AI assistance and reviewed/tested;
 it is a demonstration of implementation judgement, not a claim of a conventional
 senior software-engineering career.
 
-**Hiring for automation? Start with [the ElevenLabs role guide](docs/elevenlabs.md).**
+**Hiring for AI implementation, automation or integrations?**
+Start with the [two-minute portfolio review](docs/hiring-guide.md).
+
+## See the workflow
+
+![Illustrated synthetic workflow: customer request, structured AI output, human review, CRM update and a skipped duplicate](assets/workflow.gif)
+
+**A request becomes a reviewed, traceable business record.** The 13-second
+illustration connects the portfolio's workflow patterns: conversation data,
+structured output, explicit approval and duplicate-safe updates.
+It is a storyboard of synthetic demonstrations, not a recording of a live
+product or an existing review interface.
+
+[View the static diagram](assets/workflow.png) ·
+[Inspect the actual demo outcomes](examples/crm-events.json)
+
+## Where this experience fits
+
+| Role or team | Relevant experience | Start here |
+|---|---|---|
+| AI implementation and automation | Translate business needs into n8n/API workflows, validate outputs and investigate failures | [Business integrations](docs/project-cases.md#business-workflows-and-crmerp-integration) |
+| Voice and conversation systems | Telephony transport, transcription, speaker roles, interruption and fallback | [Voice and transcription](docs/hiring-guide.md#voice-and-conversation-systems) |
+| Solutions and integration consulting | Connect CRM/ERP processes with technical requirements, review and operational ownership | [Architecture](docs/architecture.md) |
+| Business operations and electronic components | Over 10 years of management, procurement and logistics, combined with applied AI work | [Background](#background) |
 
 ## Run in two minutes
 
@@ -67,10 +92,11 @@ malformed output is audited for review. [See the saved example report](examples/
 
 - [Project case notes: contribution, scope and evidence](docs/project-cases.md)
 - [Architecture and failure boundaries](docs/architecture.md)
-- [ElevenLabs / creator-operations mapping](docs/elevenlabs.md)
+- [Recruiter guide: experience, evidence and suggested review paths](docs/hiring-guide.md)
 - [Importable n8n validation reference](n8n/crm-review-workflow.json)
 - [Synthetic example transcript](examples/transcript.txt)
 - [Privacy model and publication checks](docs/privacy.md)
+- [Visuals: storyboard, provenance and rebuilding](docs/visuals.md)
 
 The n8n reference demonstrates validation and review routing; persistence and
 idempotency are implemented in the Python demonstration. Live provider adapters,

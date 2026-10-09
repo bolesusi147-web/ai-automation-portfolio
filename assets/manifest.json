@@ -1,0 +1,42 @@
+{
+  "synthetic": true,
+  "reviewed_on": "2026-10-09",
+  "assets": [
+    {
+      "path": "assets/portfolio-cover.png",
+      "sha256": "168c0c1b912278f679089b4ab060901a54775e2f2a497ab2531ecdf5cadf4c44",
+      "bytes": 1125028,
+      "media_type": "image/png",
+      "width": 2172,
+      "height": 724,
+      "frames": 1,
+      "duration_ms": 0,
+      "provenance": "AI-generated editorial illustration",
+      "visually_reviewed": true
+    },
+    {
+      "path": "assets/workflow.png",
+      "sha256": "15ee13962ad013c2f4b0aaca8719e3d92bdcf187e03b21ee29ec313afb29a68b",
+      "bytes": 43458,
+      "media_type": "image/png",
+      "width": 1080,
+      "height": 540,
+      "frames": 1,
+      "duration_ms": 0,
+      "provenance": "Deterministic rendering of a synthetic workflow storyboard",
+      "visually_reviewed": true
+    },
+    {
+      "path": "assets/workflow.gif",
+      "sha256": "d36c66fe664c03c11c0109fd7a00feb258aaf43040d48f93458c60223b5fd218",
+      "bytes": 1047887,
+      "media_type": "image/gif",
+      "width": 1080,
+      "height": 540,
+      "frames": 53,
+      "duration_ms": 13440,
+      "provenance": "Deterministic rendering of a synthetic workflow storyboard",
+      "visually_reviewed": true
+    }
+  ]
+}

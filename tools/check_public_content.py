@@ -1,5 +1,6 @@
 """Check repository content without printing matched secret values."""
 import argparse
+import hashlib
 import ipaddress
 import json
 from pathlib import Path
@@ -19,6 +20,47 @@ PATTERNS={
     'local_path':r'/(?:root|home)/[A-Za-z0-9_.-]+',
 }
 FORBIDDEN_SUFFIXES={'.wav','.mp3','.mp4','.sqlite','.db','.pem','.key','.pub','.log','.zip'}
+PUBLIC_VISUALS={'assets/portfolio-cover.png','assets/workflow.png','assets/workflow.gif'}
+
+
+def visual_approvals(text):
+    """A fingerprint records a reviewed asset; it does not inspect pixels."""
+    try:
+        manifest=json.loads(text)
+    except (ValueError,TypeError):
+        return {}
+    if not isinstance(manifest,dict) or manifest.get('synthetic') is not True:
+        return {}
+    result={}
+    assets=manifest.get('assets',[])
+    if not isinstance(assets,list):return {}
+    for asset in assets:
+        if not isinstance(asset,dict):continue
+        name=asset.get('path');digest=asset.get('sha256');size=asset.get('bytes')
+        if (name in PUBLIC_VISUALS and isinstance(digest,str) and
+                re.fullmatch(r'[a-f0-9]{64}',digest) and type(size) is int and
+                0<size<=6*1024*1024):
+            result.setdefault(name,set()).add((digest,size))
+    return result
+
+
+def visual_findings(name,data,approved):
+    if Path(name).suffix not in {'.png','.gif'}:return None
+    def issue(category):return [dict(path=name,category=category)]
+    if name not in PUBLIC_VISUALS or name not in approved:
+        return issue('unapproved_visual')
+    if (hashlib.sha256(data).hexdigest(),len(data)) not in approved[name]:
+        return issue('visual_fingerprint_mismatch')
+    if name.endswith('.png'):
+        valid=(len(data)>=33 and data.startswith(b'\x89PNG\r\n\x1a\n') and
+               data[12:16]==b'IHDR' and data[-8:-4]==b'IEND')
+        width=int.from_bytes(data[16:20],'big');height=int.from_bytes(data[20:24],'big')
+    else:
+        valid=len(data)>=14 and data[:6] in {b'GIF87a',b'GIF89a'} and data.endswith(b';')
+        width=int.from_bytes(data[6:8],'little');height=int.from_bytes(data[8:10],'little')
+    if not valid or not 0<width*height<=16_000_000:
+        return issue('invalid_visual_format')
+    return []
 
 
 def findings(path: str,text: str) -> list[dict]:
@@ -51,6 +93,8 @@ def path_category(name: str):
 
 def scan_paths(root: Path,paths: list[str]) -> list[dict]:
     result=[]
+    manifest=root/'assets/manifest.json'
+    approved=visual_approvals(manifest.read_text()) if manifest.is_file() and not manifest.is_symlink() else {}
     for name in sorted(set(paths)):
         p=root/name
         category=path_category(name)
@@ -59,7 +103,11 @@ def scan_paths(root: Path,paths: list[str]) -> list[dict]:
         if p.is_symlink():
             result.append(dict(path=name,category='symlink'));continue
         try:
-            text=p.read_text(encoding='utf-8')
+            data=p.read_bytes()
+            visual=visual_findings(name,data,approved)
+            if visual is not None:
+                result.extend(visual);continue
+            text=data.decode('utf-8')
         except (OSError,UnicodeError):
             result.append(dict(path=name,category='unreadable_file'));continue
         if '\x00' in text:
@@ -74,15 +122,25 @@ def git(root,*args):
 
 def history_findings(root):
     result=[];count=0
+    objects=[];approved={}
     for line in git(root,'rev-list','--objects','--all').decode().splitlines():
         fields=line.split(' ',1)
         if len(fields)!=2:continue
         object_id,name=fields
         if git(root,'cat-file','-t',object_id).strip()!=b'blob':continue
+        objects.append((object_id,name))
+        if name=='assets/manifest.json':
+            for path,values in visual_approvals(git(root,'cat-file','blob',object_id).decode()).items():
+                approved.setdefault(path,set()).update(values)
+    for object_id,name in objects:
         count+=1
         category=path_category(name)
         if category:result.append(dict(path=name,category=category));continue
-        try:text=git(root,'cat-file','blob',object_id).decode('utf-8')
+        data=git(root,'cat-file','blob',object_id)
+        visual=visual_findings(name,data,approved)
+        if visual is not None:
+            result.extend(visual);continue
+        try:text=data.decode('utf-8')
         except UnicodeError:result.append(dict(path=name,category='binary_or_media'));continue
         result.extend(findings(name,text))
     return result,count
