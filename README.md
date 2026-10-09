@@ -68,15 +68,14 @@ model responses are fixtures, not output from a live STT or LLM API.
 | [Call-to-dialogue processing](portfolio/transcript.py) | Stereo separation, timestamps, explicit speaker mapping, weaker overlapping echo suppression | Turn a conversation into a usable, attributable record |
 | [AI output → CRM](portfolio/operations.py) | Strict schema, human approval, low-confidence review, SQLite transactions, retry/idempotency audit | Keep model mistakes and duplicate deliveries from changing business state |
 
-```mermaid
-flowchart LR
-    A[Synthetic event or call] --> B[Normalise input]
-    B --> C[Fixture provider response]
-    C --> D[Validate output]
-    D --> E{Human approval and confidence}
-    E -->|Review| F[Audit and review queue]
-    E -->|Approved| G[Transactional CRM update]
-    G --> H[Idempotency record]
+```text
+Synthetic event or call
+  → Normalise input
+  → Fixture provider response
+  → Validate output
+  → Check human approval and confidence
+      ├─ Review required → Audit and review queue
+      └─ Approved       → Transactional CRM update → Idempotency record
 ```
 
 The offline run demonstrates four CRM outcomes:

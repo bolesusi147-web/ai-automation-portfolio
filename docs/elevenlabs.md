@@ -20,13 +20,13 @@ My source-domain experience is B2B electronic components, not previous influence
 operations. A similar workflow could connect creator onboarding, an approved
 agreement, campaign milestones and CRM/reporting:
 
-```mermaid
-flowchart LR
-    A[Creator milestone event] --> B[Event identity and trusted routing]
-    B --> C[Extract structured update]
-    C --> D[Validate + human review]
-    D --> E[CRM and reporting]
-    E --> F[Reconciliation / retry audit]
+```text
+Creator milestone event
+  → Event identity and trusted routing
+  → Extract structured update
+  → Validation and human review
+  → CRM and reporting
+  → Reconciliation and retry audit
 ```
 
 The code demonstrates the control patterns for this transfer. It does not claim

@@ -2,16 +2,15 @@
 
 ## Voice transport and lifecycle
 
-```mermaid
-stateDiagram-v2
-    [*] --> Listening
-    Listening --> Speaking: answer queued
-    Speaking --> Listening: interrupt / clear queued PCM
-    Listening --> Listening: primary timeout / fallback
-    Speaking --> Listening: primary timeout / clear queued PCM
-    Listening --> Closed: fallback timeout or hangup
-    Speaking --> Closed: hangup
-```
+| Current state | Event | Next state | Handling |
+|---|---|---|---|
+| Start | Session initialised | Listening | Wait for input |
+| Listening | Answer queued | Speaking | Play the queued response |
+| Speaking | Interrupt | Listening | Clear queued PCM |
+| Listening | Primary timeout | Listening | Switch to the fallback provider |
+| Speaking | Primary timeout | Listening | Clear queued PCM and switch to fallback |
+| Listening | Fallback timeout or hangup | Closed | End the session |
+| Speaking | Hangup | Closed | End the session |
 
 `FrameDecoder` accepts packet type, two-byte big-endian length and payload across
 arbitrary bounded byte chunks. PCM16 must contain whole samples; incomplete frames
